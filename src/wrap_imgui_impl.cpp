@@ -31,6 +31,20 @@
 #ifdef luaL_dostring
 #undef luaL_dostring
 #define luaL_dostring DoStringCache::doString
+
+#if defined(_WIN32) || defined(_WIN64)
+
+#include <math.h>
+
+// strndup() is not available on Windows
+char *strndup( const char *s1, size_t n)
+{
+    char *copy= (char*)malloc( n+1 );
+    memcpy( copy, s1, n );
+    copy[n] = 0;
+    return copy;
+};
+
 #endif
 
 /*
@@ -55,6 +69,39 @@ static int w_NewFrame(lua_State *L)
 	}
 	NewFrame();
 	return 0;
+}
+
+// Util
+const char* getRealDirectoryIfExists(lua_State *L, const char* relativePath)
+{
+    if (L == nullptr || relativePath == nullptr)
+    {
+        return nullptr;
+    }
+
+    int originalStackSize = lua_gettop(L);
+    lua_getglobal(L, "love");
+    if (lua_isnil(L, -1))
+    {
+        lua_pop(L, 1);
+        return nullptr;
+    }
+
+    lua_getfield(L, -1, "filesystem");
+    lua_getfield(L, -1, "getRealDirectory");
+    lua_pushstring(L, relativePath);
+    lua_call(L, 1, 1);
+
+    char* result = nullptr;
+    if (!lua_isnil(L, -1))
+    {
+        size_t size = 0;
+        const char* tmp = lua_tolstring(L, -1, &size);
+        result = strndup(tmp, size);
+    }
+
+    lua_pop(L, lua_gettop(L) - originalStackSize);
+    return result;
 }
 
 // Inputs
@@ -163,27 +210,48 @@ static int w_SetGlobalFontFromFileTTF(lua_State *L)
 	float oversample_x = luaL_optnumber(L, 5, 1);
 	float oversample_y = luaL_optnumber(L, 6, 1);
 
-	DoStringCache::getLOVE(L);
-	lua_getfield(L, -1, "filesystem");
-	lua_remove(L, -2);
-	lua_getfield(L, -1, "getRealDirectory");
-	lua_remove(L, -2);
-	lua_pushstring(L, path);
-	lua_call(L, 1, 1);
-	if (lua_isnil(L, -1))
-	{
+	const char* basePath = getRealDirectoryIfExists(L, path);
+	if (basePath == nullptr) {
 		lua_pushstring(L, "File does not exist.");
 		lua_error(L);
 		return 0;
 	}
-	lua_pushstring(L, "/");
-	lua_pushstring(L, path);
-	lua_concat(L, 3);
-	const char *realpath = lua_tostring(L, -1);
-	lua_pop(L, 1);
 
-	SetGlobalFontFromFileTTF(realpath, size_pixels, spacing_x, spacing_y, oversample_x, oversample_y);
+	char fullPath[4096] = {0};
+	snprintf(&(fullPath[0]), sizeof(fullPath) - 1, "%s/%s", basePath, path);
+	SetGlobalFontFromFileTTF(&(fullPath[0]), size_pixels, spacing_x, spacing_y,
+							oversample_x, oversample_y);
+	lua_settop(L, 0);
 	return 0;
+}
+
+static int w_AddFontFromFileTTF(lua_State *L) {
+    size_t filenameSize;
+    const char* filename = luaL_checklstring(L, 1, &filenameSize);
+    float pixelSize = luaL_checknumber(L, 2);
+
+    const char* basePath = getRealDirectoryIfExists(L, filename);
+    if (basePath == nullptr) {
+		lua_pushstring(L, "File does not exist.");
+		lua_error(L);
+		return 0;
+    }
+
+    char fullPath[4096] = {0};
+    snprintf(&(fullPath[0]), sizeof(fullPath) - 1, "%s/%s", basePath, filename);
+
+    ImFontConfig* fontCfg = (ImFontConfig*)lua_touserdata(L, 3);
+
+    ImGuiIO& io = ImGui::GetIO();
+    ImFont* font = io.Fonts->AddFontFromFileTTF(&(fullPath[0]), pixelSize);
+    lua_settop(L, 0);
+
+    if (font == nullptr) {
+        return luaL_error(L, "Could not load font");
+    } else {
+        lua_pushlightuserdata(L, (void*)font);
+        return 1;
+    }
 }
 
 /*
@@ -863,6 +931,7 @@ static const struct luaL_Reg imguilib[] = {
 { "GetStyleColName", w_GetStyleColorName },
 { "GetStyleColCount", w_GetStyleColCount },
 { "SetGlobalFontFromFileTTF", w_SetGlobalFontFromFileTTF },
+{ "AddFontFromFileTTF", w_AddFontFromFileTTF },
 
 // Overrides
 { "Value", w_Value },
