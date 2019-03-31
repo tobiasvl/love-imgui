@@ -1,6 +1,7 @@
 // IMGUI
 #include "imgui_impl.h"
 #include "libimgui/imgui.h"
+#include "dostring_cache.h"
 
 // STD
 #include <string>
@@ -15,6 +16,12 @@ static std::string					g_iniPath;
 static std::map<std::string, int>	g_keyMap;
 static lua_State					*g_L;
 
+// dostring cache hack
+#ifdef luaL_dostring
+#undef luaL_dostring
+#define luaL_dostring DoStringCache::doString
+#endif
+
 // This is the main rendering function that you have to implement and provide to ImGui (via setting up 'RenderDrawListsFn' in the ImGuiIO structure)
 // If text or lines are blurry when integrating ImGui in your engine:
 // - in your Render function, try translating your projection matrix by (0.5f,0.5f) or (0.375f,0.375f)
@@ -28,7 +35,7 @@ void ImGui_Impl_RenderDrawLists(ImDrawData* draw_data)
 		return;
 	draw_data->ScaleClipRects(io.DisplayFramebufferScale);
 
-	lua_getglobal(g_L, "imgui");
+	DoStringCache::getImgui(g_L);
 	// Render command lists
 	for (int n = 0; n < draw_data->CmdListsCount; n++)
 	{
@@ -106,7 +113,7 @@ static const char* ImGui_Impl_GetClipboardText(void* user_data)
 
 static void ImGui_Impl_SetClipboardText(void* user_data, const char* text)
 {
-	lua_getglobal(g_L, "imgui");
+	DoStringCache::getImgui(g_L);
 	lua_pushstring(g_L, text);
 	lua_setfield(g_L, -2, "clipboardText");
 	luaL_dostring(g_L, "love.system.setClipboardText(imgui.clipboardText)");
@@ -129,7 +136,7 @@ bool Init(lua_State *L)
 	int width, height;
 	io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
 	
-	lua_getglobal(L, "imgui");
+	DoStringCache::getImgui(L);
 	lua_pushnumber(L, width);
 	lua_setfield(L, -2, "textureWidth");
 	lua_pushnumber(L, height);
@@ -227,7 +234,7 @@ void NewFrame()
 	g_MouseWheel = 0.0f;
 
 	// Hide OS mouse cursor if ImGui is drawing it
-	lua_getglobal(g_L, "imgui");
+	DoStringCache::getImgui(g_L);
 	lua_pushboolean(g_L, (int)io.MouseDrawCursor);
 	lua_setfield(g_L, -2, "mouseDrawCursor");
 	luaL_dostring(g_L, "love.mouse.setVisible(not imgui.mouseDrawCursor)");

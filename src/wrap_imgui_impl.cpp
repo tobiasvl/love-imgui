@@ -22,9 +22,16 @@
 #include "libimgui/imgui_dock.h"
 #include "imgui_impl.h"
 #include "wrap_imgui_impl.h"
+#include "dostring_cache.h"
 
 #include <vector>
 #include <cstring>
+
+// dostring cache hack
+#ifdef luaL_dostring
+#undef luaL_dostring
+#define luaL_dostring DoStringCache::doString
+#endif
 
 /*
 ** Love implentation functions
@@ -156,7 +163,7 @@ static int w_SetGlobalFontFromFileTTF(lua_State *L)
 	float oversample_x = luaL_optnumber(L, 5, 1);
 	float oversample_y = luaL_optnumber(L, 6, 1);
 
-	lua_getglobal(L, "love");
+	DoStringCache::getLOVE(L);
 	lua_getfield(L, -1, "filesystem");
 	lua_remove(L, -2);
 	lua_getfield(L, -1, "getRealDirectory");
@@ -190,7 +197,7 @@ static int impl_##name(lua_State *L) { \
   int stackval = 0;
 
 #define TEXTURE_ARG(name) \
-	lua_getglobal(L, "imgui"); \
+	DoStringCache::getImgui(L); \
 	lua_pushvalue(L, arg++); \
 	lua_setfield(L, -2, "textureID"); \
 	luaL_dostring(L, "imgui.textures = imgui.textures or {}\
@@ -892,10 +899,6 @@ static const struct luaL_Reg imguilib[] = {
 { NULL, NULL }
 };
 
-extern "C" {
-	void luax_register(lua_State *L, const char *name, const luaL_Reg *l);
-}
-
 #define WRAP_ENUM(L, name, val) \
   lua_pushlstring(L, #name, sizeof(#name)-1); \
   lua_pushnumber(L, val); \
@@ -1271,6 +1274,27 @@ extern "C" LOVE_IMGUI_EXPORT int luaopen_imgui(lua_State *L)
 	WRAP_ENUM(L, ImGuiDockSlot_Float, ImGuiDockSlot_Float);
 	WRAP_ENUM(L, ImGuiDockSlot_None, ImGuiDockSlot_None);
 
-	luaL_openlib(L, "imgui", imguilib, 1);
+	//luaL_openlib(L, NULL, imguilib, 1);
+	//luaL_register(L, nullptr, imguilib);
+	// Had to register functions manually
+	int tabTop = lua_gettop(L);
+	for (const luaL_Reg *l = imguilib; l->name; l++)
+	{
+		lua_pushstring(L, l->name);
+		lua_pushvalue(L, tabTop);
+		lua_pushcclosure(L, l->func, 1);
+		lua_rawset(L, tabTop);
+	}
+
+	// require love
+	lua_pushstring(L, "require");
+	lua_rawget(L, LUA_GLOBALSINDEX);
+	lua_pushstring(L, "love");
+	lua_call(L, 1, 1);
+
+	// initialize dostring cache
+	// imgui is at -2, love is at -1
+	DoStringCache::init(L, "love-imgui");
+	lua_pop(L, 1); // remove "love" table
 	return 1;
 }
