@@ -26,7 +26,7 @@ extern "C" {
 #include <lauxlib.h>
 }
 
-#ifdef WIN32
+#ifdef _WIN32
 #	define LOVE_IMGUI_EXPORT __declspec(dllexport)
 #else
 #	define LOVE_IMGUI_EXPORT

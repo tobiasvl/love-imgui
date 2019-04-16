@@ -30,6 +30,7 @@ ADD_LIBRARY(love-imgui
 	src/wrap_imgui_impl.h
 	src/imgui_iterator.h
 	src/imgui_iterator_dock.h
+	src/dostring_cache.cpp
 )
 
 TARGET_INCLUDE_DIRECTORIES(love-imgui
@@ -41,8 +42,6 @@ TARGET_LINK_LIBRARIES(love-imgui
 	${DESIRED_LUA_LIBRARY}
 )
 
-SET_TARGET_PROPERTIES(love-imgui PROPERTIES PREFIX "")
+#SET_TARGET_PROPERTIES(love-imgui PROPERTIES PREFIX "")
 
-IF(DEFINED "LIB_DIR")
-	INSTALL(TARGETS love-imgui LIBRARY DESTINATION ${LIB_DIR})
-ENDIF()
+INSTALL(TARGETS love-imgui LIBRARY DESTINATION lib)

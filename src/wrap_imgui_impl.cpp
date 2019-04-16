@@ -31,6 +31,7 @@
 #ifdef luaL_dostring
 #undef luaL_dostring
 #define luaL_dostring DoStringCache::doString
+#endif
 
 #if defined(_WIN32) || defined(_WIN64)
 
@@ -218,7 +219,7 @@ static int w_SetGlobalFontFromFileTTF(lua_State *L)
 	}
 
 	char fullPath[4096] = {0};
-	snprintf(&(fullPath[0]), sizeof(fullPath) - 1, "%s/%s", basePath, path);
+	sprintf(fullPath, "%s/%s", basePath, path);
 	SetGlobalFontFromFileTTF(&(fullPath[0]), size_pixels, spacing_x, spacing_y,
 							oversample_x, oversample_y);
 	lua_settop(L, 0);
@@ -238,7 +239,7 @@ static int w_AddFontFromFileTTF(lua_State *L) {
     }
 
     char fullPath[4096] = {0};
-    snprintf(&(fullPath[0]), sizeof(fullPath) - 1, "%s/%s", basePath, filename);
+    sprintf(fullPath, "%s/%s", basePath, filename);
 
     ImFontConfig* fontCfg = (ImFontConfig*)lua_touserdata(L, 3);
 
