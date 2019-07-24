@@ -1,4 +1,5 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(love-imgui)
 
 SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 FIND_PACKAGE(LuaJIT)
@@ -12,7 +13,7 @@ ELSE()
 ENDIF()
 
 ADD_LIBRARY(love-imgui
-	MODULE
+	SHARED
 	src/libimgui/imconfig.h
 	src/libimgui/imgui.cpp
 	src/libimgui/imgui.h
@@ -42,6 +43,6 @@ TARGET_LINK_LIBRARIES(love-imgui
 	${DESIRED_LUA_LIBRARY}
 )
 
-#SET_TARGET_PROPERTIES(love-imgui PROPERTIES PREFIX "")
+SET_TARGET_PROPERTIES(love-imgui PROPERTIES PREFIX "" OUTPUT_NAME "imgui")
 
 INSTALL(TARGETS love-imgui LIBRARY DESTINATION lib)
