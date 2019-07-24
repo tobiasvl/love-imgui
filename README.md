@@ -37,7 +37,7 @@ Pre-built binaries for Windows and Mas OSX are provided in the [releases](https:
 
 Simple integration:
 ```lua
-require "imgui"
+local imgui = require "imgui"
 
 local showTestWindow = false
 local showAnotherWindow = false
@@ -164,7 +164,7 @@ end
 
 Docks:
 ```lua
-require "imgui"
+local imgui = require "imgui"
 
 --
 -- LOVE callbacks

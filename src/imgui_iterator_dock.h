@@ -25,6 +25,7 @@ OPTIONAL_ENUM_ARG(extra_flags, 0)
 CALL_FUNCTION(BeginDock, bool, label, opened, extra_flags)
 IF_RET_ADD_END_STACK(1)
 PUSH_BOOL(ret)
+PUSH_LAST_BOOL(ret)
 END_IMGUI_FUNC
 //IMGUI_API void SetNextDockSplitRatio(const ImVec2& split_ratio = ImVec2 0.5  0.5);
 IMGUI_FUNCTION(SetNextDockSplitRatio)
