@@ -126,7 +126,10 @@ static void ImGui_Impl_SetClipboardText(void* user_data, const char* text)
 
 bool Init(lua_State *L)
 {
+	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
+
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
 	// LUA state
 	g_L = L;
@@ -203,7 +206,7 @@ bool Init(lua_State *L)
 
 void ShutDown()
 {
-	ImGui::Shutdown();
+	ImGui::DestroyContext();
 }
 
 void NewFrame()
