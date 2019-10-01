@@ -630,6 +630,7 @@ END_IMGUI_FUNC
 //    IMGUI_API void           EndTabBar();
 IMGUI_FUNCTION(EndTabBar)
 CALL_FUNCTION_NO_RET(EndTabBar)
+POP_END_STACK(14)
 END_IMGUI_FUNC
 //    IMGUI_API bool           BeginTabItem(const char* label, bool* p_open = NULL, ImGuiTabItemFlags flags = 0);
 IMGUI_FUNCTION(BeginTabItem)
@@ -643,6 +644,7 @@ END_IMGUI_FUNC
 //    IMGUI_API void           EndTabItem();
 IMGUI_FUNCTION(EndTabItem)
 CALL_FUNCTION_NO_RET(EndTabItem)
+POP_END_STACK(15)
 END_IMGUI_FUNC
 //    IMGUI_API void           SetTabItemClosed(const char* tab_or_docked_window_label);
 IMGUI_FUNCTION(SetTabItemClosed)
@@ -2266,4 +2268,6 @@ END_STACK_OPTION(10, EndPopup)
 END_STACK_OPTION(11, EndDragDropSource)
 END_STACK_OPTION(12, EndDragDropTarget)
 END_STACK_OPTION(13, EndChildFrame)
+END_STACK_OPTION(14, EndTabBar)
+END_STACK_OPTION(15, EndTabItem)
 END_STACK_END
