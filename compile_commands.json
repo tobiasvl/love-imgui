@@ -1,36 +1,36 @@
 [
 {
-  "directory": "/home/canoi/Projects/love-imgui",
+  "directory": "/home/canoi/Documentos/Projects/love-imgui",
   "command": "/usr/bin/c++  -Dlove_imgui_EXPORTS -I/usr/include/lua5.1  -fPIC   -o CMakeFiles/love-imgui.dir/src/libimgui/imgui.cpp.o -c /home/canoi/Projects/love-imgui/src/libimgui/imgui.cpp",
   "file": "/home/canoi/Projects/love-imgui/src/libimgui/imgui.cpp"
 },
 {
-  "directory": "/home/canoi/Projects/love-imgui",
+  "directory": "/home/canoi/Documentos/Projects/love-imgui",
   "command": "/usr/bin/c++  -Dlove_imgui_EXPORTS -I/usr/include/lua5.1  -fPIC   -o CMakeFiles/love-imgui.dir/src/libimgui/imgui_draw.cpp.o -c /home/canoi/Projects/love-imgui/src/libimgui/imgui_draw.cpp",
   "file": "/home/canoi/Projects/love-imgui/src/libimgui/imgui_draw.cpp"
 },
 {
-  "directory": "/home/canoi/Projects/love-imgui",
+  "directory": "/home/canoi/Documentos/Projects/love-imgui",
   "command": "/usr/bin/c++  -Dlove_imgui_EXPORTS -I/usr/include/lua5.1  -fPIC   -o CMakeFiles/love-imgui.dir/src/libimgui/imgui_demo.cpp.o -c /home/canoi/Projects/love-imgui/src/libimgui/imgui_demo.cpp",
   "file": "/home/canoi/Projects/love-imgui/src/libimgui/imgui_demo.cpp"
 },
 {
-  "directory": "/home/canoi/Projects/love-imgui",
+  "directory": "/home/canoi/Documentos/Projects/love-imgui",
   "command": "/usr/bin/c++  -Dlove_imgui_EXPORTS -I/usr/include/lua5.1  -fPIC   -o CMakeFiles/love-imgui.dir/src/libimgui/imgui_widgets.cpp.o -c /home/canoi/Projects/love-imgui/src/libimgui/imgui_widgets.cpp",
   "file": "/home/canoi/Projects/love-imgui/src/libimgui/imgui_widgets.cpp"
 },
 {
-  "directory": "/home/canoi/Projects/love-imgui",
+  "directory": "/home/canoi/Documentos/Projects/love-imgui",
   "command": "/usr/bin/c++  -Dlove_imgui_EXPORTS -I/usr/include/lua5.1  -fPIC   -o CMakeFiles/love-imgui.dir/src/imgui_impl.cpp.o -c /home/canoi/Projects/love-imgui/src/imgui_impl.cpp",
   "file": "/home/canoi/Projects/love-imgui/src/imgui_impl.cpp"
 },
 {
-  "directory": "/home/canoi/Projects/love-imgui",
+  "directory": "/home/canoi/Documentos/Projects/love-imgui",
   "command": "/usr/bin/c++  -Dlove_imgui_EXPORTS -I/usr/include/lua5.1  -fPIC   -o CMakeFiles/love-imgui.dir/src/wrap_imgui_impl.cpp.o -c /home/canoi/Projects/love-imgui/src/wrap_imgui_impl.cpp",
   "file": "/home/canoi/Projects/love-imgui/src/wrap_imgui_impl.cpp"
 },
 {
-  "directory": "/home/canoi/Projects/love-imgui",
+  "directory": "/home/canoi/Documentos/Projects/love-imgui",
   "command": "/usr/bin/c++  -Dlove_imgui_EXPORTS -I/usr/include/lua5.1  -fPIC   -o CMakeFiles/love-imgui.dir/src/dostring_cache.cpp.o -c /home/canoi/Projects/love-imgui/src/dostring_cache.cpp",
   "file": "/home/canoi/Projects/love-imgui/src/dostring_cache.cpp"
 }

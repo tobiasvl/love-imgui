@@ -5,10 +5,10 @@ imgui.NewFrame()
 end
 
 function love.draw()
-imgui.SetNextWindowPos(0, 0)
-imgui.SetNextWindowSize(love.graphics.getWidth(), love.graphics.getHeight())
-if imgui.Begin("DockArea", nil, { "ImGuiWindowFlags_NoTitleBar", "ImGuiWindowFlags_NoResize", "ImGuiWindowFlags_NoMove", "ImGuiWindowFlags_NoBringToFrontOnFocus" }) then
-	imgui.DockSpace(123)
+--imgui.SetNextWindowPos(0, 0)
+--imgui.SetNextWindowSize(love.graphics.getWidth(), love.graphics.getHeight())
+--if imgui.Begin("DockArea", nil, { "ImGuiWindowFlags_NoTitleBar", "ImGuiWindowFlags_NoResize", "ImGuiWindowFlags_NoMove", "ImGuiWindowFlags_NoBringToFrontOnFocus" }) then
+	--imgui.DockSpace(123)
 
 	if imgui.Begin("testando", true) then
 	    imgui.End();
@@ -17,9 +17,11 @@ if imgui.Begin("DockArea", nil, { "ImGuiWindowFlags_NoTitleBar", "ImGuiWindowFla
 	if imgui.Begin("testando2", true) then
 	    imgui.End();
 	end
-	
-	imgui.End()
-end
+
+	imgui.ShowDemoWindow()
+
+	--imgui.End()
+--end
 imgui.Render()
 end
 
