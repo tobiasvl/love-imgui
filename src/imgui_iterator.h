@@ -139,6 +139,12 @@ PUSH_LAST_NUMBER(ret)
 END_IMGUI_FUNC
 //    IMGUI_API ImDrawList*   GetWindowDrawList();                                                // get rendering command-list if you want to append your own draw primitives
 // Unsupported return type ImDrawList*
+//    IMGUI_API float         GetWindowDpiScale();                                      //
+IMGUI_FUNCTION(GetWindowDpiScale)
+CALL_FUNCTION(GetWindowDpiScale, float)
+PUSH_NUMBER(ret)
+PUSH_LAST_NUMBER(ret)
+END_IMGUI_FUNC
 //    IMGUI_API ImVec2        GetWindowPos();                                                     // get current window position in screen space (useful if you want to do your own drawing via the DrawList api)
 IMGUI_FUNCTION(GetWindowPos)
 CALL_FUNCTION(GetWindowPos, ImVec2)
@@ -201,7 +207,7 @@ END_IMGUI_FUNC
 IMGUI_FUNCTION(SetNextWindowSizeConstraints)
 IM_VEC_2_ARG(size_min)
 IM_VEC_2_ARG(size_max)
-DEFAULT_ARG(ImGuiSizeConstraintCallback, custom_callback, NULL)
+DEFAULT_ARG(ImGuiSizeCallback, custom_callback, NULL)
 DEFAULT_ARG(void*, custom_callback_data, NULL)
 CALL_FUNCTION_NO_RET(SetNextWindowSizeConstraints, size_min, size_max, custom_callback, custom_callback_data)
 END_IMGUI_FUNC
@@ -219,6 +225,16 @@ END_IMGUI_FUNC
 //    IMGUI_API void          SetNextWindowFocus();                                               // set next window to be focused / front-most. call before Begin()
 IMGUI_FUNCTION(SetNextWindowFocus)
 CALL_FUNCTION_NO_RET(SetNextWindowFocus)
+END_IMGUI_FUNC
+//    IMGUI_API void 		  SetNextWindowBgAlpha(alpha)
+IMGUI_FUNCTION(SetNextWindowBgAlpha)
+NUMBER_ARG(alpha)
+CALL_FUNCTION_NO_RET(SetNextWindowBgAlpha, alpha)
+END_IMGUI_FUNC
+//    IMGUI_API void 		  SetNextWindowViewport(ImGuiID viewport_id)
+IMGUI_FUNCTION(SetNextWindowViewport)
+NUMBER_ARG(viewport_id)
+CALL_FUNCTION_NO_RET(SetNextWindowViewport, viewport_id)
 END_IMGUI_FUNC
 //    IMGUI_API void          SetWindowPos(const ImVec2& pos, ImGuiCond cond = 0);                // (not recommended) set current window position - call within Begin()/End(). prefer using SetNextWindowPos(), as this may incur tearing and side-effects.
 IMGUI_FUNCTION(SetWindowPos)
@@ -602,6 +618,63 @@ IMGUI_FUNCTION(GetColumnsCount)
 CALL_FUNCTION(GetColumnsCount, int)
 PUSH_NUMBER(ret)
 PUSH_LAST_NUMBER(ret)
+END_IMGUI_FUNC
+//    IMGUI_API bool           BeginTabBar(const char* str_id, ImGuiTabBarFlags flags = 0);
+IMGUI_FUNCTION(BeginTabBar)
+LABEL_ARG(str_id)
+OPTIONAL_ENUM_ARG(flags, 0)
+CALL_FUNCTION(BeginTabBar, int, str_id, flags)
+PUSH_BOOL(ret)
+PUSH_LAST_BOOL(ret)
+END_IMGUI_FUNC
+//    IMGUI_API void           EndTabBar();
+IMGUI_FUNCTION(EndTabBar)
+CALL_FUNCTION_NO_RET(EndTabBar)
+POP_END_STACK(14)
+END_IMGUI_FUNC
+//    IMGUI_API bool           BeginTabItem(const char* label, bool* p_open = NULL, ImGuiTabItemFlags flags = 0);
+IMGUI_FUNCTION(BeginTabItem)
+LABEL_ARG(label)
+OPTIONAL_BOOL_POINTER_ARG(p_open)
+OPTIONAL_ENUM_ARG(flags, 0)
+CALL_FUNCTION(BeginTabItem, int, label, p_open, flags)
+PUSH_BOOL(ret)
+PUSH_LAST_BOOL(ret)
+END_IMGUI_FUNC
+//    IMGUI_API void           EndTabItem();
+IMGUI_FUNCTION(EndTabItem)
+CALL_FUNCTION_NO_RET(EndTabItem)
+POP_END_STACK(15)
+END_IMGUI_FUNC
+//    IMGUI_API void           SetTabItemClosed(const char* tab_or_docked_window_label);
+IMGUI_FUNCTION(SetTabItemClosed)
+LABEL_ARG(tab_or_docked_window_label)
+CALL_FUNCTION_NO_RET(SetTabItemClosed, tab_or_docked_window_label)
+END_IMGUI_FUNC
+//    IMGUI_API void           DockSpace(ImGuiID id, const ImVec2& size = ImVec2(0, 0), ImGuiDockNodeFlags flags = 0, const ImGuiWindowClass* window_class = NULL);
+IMGUI_FUNCTION(DockSpace)
+NUMBER_ARG(id)
+OPTIONAL_IM_VEC_2_ARG(size, 0, 0)
+OPTIONAL_ENUM_ARG(flags, 0)
+CALL_FUNCTION_NO_RET(DockSpace, id, size, flags, NULL)
+END_IMGUI_FUNC
+//    IMGUI_API void           SetNextWindowDockID(ImGuiID dock_id, ImGuiCond cond = 0);
+IMGUI_FUNCTION(SetNextWindowDockID)
+NUMBER_ARG(dock_id)
+OPTIONAL_ENUM_ARG(cond, 0)
+CALL_FUNCTION_NO_RET(SetNextWindowDockID, dock_id, cond)
+END_IMGUI_FUNC
+//    IMGUI_API ImGuiID           GetWindowDockID();
+IMGUI_FUNCTION(GetWindowDockID)
+CALL_FUNCTION(GetWindowDockID, int)
+PUSH_NUMBER(ret)
+PUSH_LAST_NUMBER(ret)
+END_IMGUI_FUNC
+//    IMGUI_API bool           IsWindowDocked();
+IMGUI_FUNCTION(IsWindowDocked)
+CALL_FUNCTION(IsWindowDocked, bool)
+PUSH_BOOL(ret)
+PUSH_LAST_BOOL(ret)
 END_IMGUI_FUNC
 //    IMGUI_API void          PushID(const char* str_id);                                         // push identifier into the ID stack. IDs are hash of the entire stack!
 IMGUI_FUNCTION(PushID)
@@ -1031,6 +1104,19 @@ PUSH_BOOL(ret)
 END_LABEL_POINTER(buf)
 PUSH_LAST_BOOL(ret)
 END_IMGUI_FUNC
+//    IMGUI_API bool          InputTextWithHint(const char* label, const char* hint, char* buf, size_t buf_size, const ImVec2& size = ImVec2 0 0, ImGuiInputTextFlags flags = 0, ImGuiTextEditCallback callback = NULL, void* user_data = NULL);
+IMGUI_FUNCTION(InputTextWithHint)
+LABEL_ARG(label)
+LABEL_ARG(hint)
+LABEL_POINTER_ARG(buf)
+OPTIONAL_ENUM_ARG(flags, 0)
+DEFAULT_ARG(ImGuiTextEditCallback, callback, NULL)
+DEFAULT_ARG(void*, user_data, NULL)
+CALL_FUNCTION(InputTextWithHint, bool, label, hint, buf, buf_size, flags, callback, user_data)
+PUSH_BOOL(ret)
+END_LABEL_POINTER(buf)
+PUSH_LAST_BOOL(ret)
+END_IMGUI_FUNC
 //    IMGUI_API bool          InputFloat(const char* label, float* v, float step = 0.0f, float step_fast = 0.0f, int decimal_precision = -1, ImGuiInputTextFlags extra_flags = 0);
 IMGUI_FUNCTION(InputFloat)
 LABEL_ARG(label)
@@ -1416,6 +1502,12 @@ PUSH_BOOL(ret)
 END_BOOL_POINTER(p_open)
 PUSH_LAST_BOOL(ret)
 END_IMGUI_FUNC
+//    IMGUI_API void          SetNextItemOpen(bool is_open, ImGuiCond cond = 0);                  // set next TreeNode/CollapsingHeader open state.
+IMGUI_FUNCTION(SetNextItemOpen)
+BOOL_ARG(is_open)
+OPTIONAL_ENUM_ARG(cond, 0)
+CALL_FUNCTION_NO_RET(SetNextItemOpen, is_open, cond)
+END_IMGUI_FUNC
 //    IMGUI_API bool          Selectable(const char* label, bool selected = false, ImGuiSelectableFlags flags = 0, const ImVec2& size = ImVec2 0 0);  // size.x==0.0: use remaining width, size.x>0.0: specify width. size.y==0.0: use label height, size.y>0.0: specify height
 IMGUI_FUNCTION(Selectable)
 LABEL_ARG(label)
@@ -1684,8 +1776,7 @@ END_IMGUI_FUNC
 //    IMGUI_API bool          BeginDragDropSource(ImGuiDragDropFlags flags = 0, int mouse_button = 0);                // call when the current item is active. If this return true, you can call SetDragDropPayload() + EndDragDropSource()
 IMGUI_FUNCTION(BeginDragDropSource)
 OPTIONAL_ENUM_ARG(flags, 0)
-OPTIONAL_INT_ARG(mouse_button, 0)
-CALL_FUNCTION(BeginDragDropSource, bool, flags, mouse_button)
+CALL_FUNCTION(BeginDragDropSource, bool, flags)
 IF_RET_ADD_END_STACK(11)
 PUSH_BOOL(ret)
 PUSH_LAST_BOOL(ret)
@@ -1760,6 +1851,12 @@ CALL_FUNCTION(IsItemActive, bool)
 PUSH_BOOL(ret)
 PUSH_LAST_BOOL(ret)
 END_IMGUI_FUNC
+//    IMGUI_API bool          IsItemFocused();                                // is the last item clicked? (e.g. button/node just clicked on)
+IMGUI_FUNCTION(IsItemFocused)
+CALL_FUNCTION(IsItemFocused, bool)
+PUSH_BOOL(ret)
+PUSH_LAST_BOOL(ret)
+END_IMGUI_FUNC
 //    IMGUI_API bool          IsItemClicked(int mouse_button = 0);                                // is the last item clicked? (e.g. button/node just clicked on)
 IMGUI_FUNCTION(IsItemClicked)
 OPTIONAL_INT_ARG(mouse_button, 0)
@@ -1773,6 +1870,30 @@ CALL_FUNCTION(IsItemVisible, bool)
 PUSH_BOOL(ret)
 PUSH_LAST_BOOL(ret)
 END_IMGUI_FUNC
+//    IMGUI_API bool          IsItemEdited();                                                    // is the last item visible? (aka not out of sight due to clipping/scrolling.)
+IMGUI_FUNCTION(IsItemEdited)
+CALL_FUNCTION(IsItemEdited, bool)
+PUSH_BOOL(ret)
+PUSH_LAST_BOOL(ret)
+END_IMGUI_FUNC
+//    IMGUI_API bool          IsItemActivated();                                                    // is the last item visible? (aka not out of sight due to clipping/scrolling.)
+IMGUI_FUNCTION(IsItemActivated)
+CALL_FUNCTION(IsItemActivated, bool)
+PUSH_BOOL(ret)
+PUSH_LAST_BOOL(ret)
+END_IMGUI_FUNC
+//    IMGUI_API bool          IsItemDeactivated();                                                    // is the last item visible? (aka not out of sight due to clipping/scrolling.)
+IMGUI_FUNCTION(IsItemDeactivated)
+CALL_FUNCTION(IsItemDeactivated, bool)
+PUSH_BOOL(ret)
+PUSH_LAST_BOOL(ret)
+END_IMGUI_FUNC
+//    IMGUI_API bool          IsItemDeactivatedAfterEdit();                                                    // is the last item visible? (aka not out of sight due to clipping/scrolling.)
+IMGUI_FUNCTION(IsItemDeactivatedAfterEdit)
+CALL_FUNCTION(IsItemDeactivatedAfterEdit, bool)
+PUSH_BOOL(ret)
+PUSH_LAST_BOOL(ret)
+END_IMGUI_FUNC
 //    IMGUI_API bool          IsAnyItemHovered();
 IMGUI_FUNCTION(IsAnyItemHovered)
 CALL_FUNCTION(IsAnyItemHovered, bool)
@@ -1782,6 +1903,12 @@ END_IMGUI_FUNC
 //    IMGUI_API bool          IsAnyItemActive();
 IMGUI_FUNCTION(IsAnyItemActive)
 CALL_FUNCTION(IsAnyItemActive, bool)
+PUSH_BOOL(ret)
+PUSH_LAST_BOOL(ret)
+END_IMGUI_FUNC
+//    IMGUI_API bool          IsAnyItemFocused();
+IMGUI_FUNCTION(IsAnyItemFocused)
+CALL_FUNCTION(IsAnyItemFocused, bool)
 PUSH_BOOL(ret)
 PUSH_LAST_BOOL(ret)
 END_IMGUI_FUNC
@@ -2141,4 +2268,6 @@ END_STACK_OPTION(10, EndPopup)
 END_STACK_OPTION(11, EndDragDropSource)
 END_STACK_OPTION(12, EndDragDropTarget)
 END_STACK_OPTION(13, EndChildFrame)
+END_STACK_OPTION(14, EndTabBar)
+END_STACK_OPTION(15, EndTabItem)
 END_STACK_END
