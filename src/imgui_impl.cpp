@@ -55,9 +55,10 @@ void ImGui_Impl_RenderDrawLists(ImDrawData* draw_data)
 		lua_pushnumber(g_L, cmd_list->VtxBuffer.size() * sizeof(ImDrawVert));
 		lua_setfield(g_L, -2, "verticesSize");
 
-		luaL_dostring(g_L, "imgui.renderMesh = love.graphics.newMesh(imgui.vertexformat, love.image.newImageData(imgui.verticesSize / 4, 1, 'rgba8', imgui.verticesData), \"triangles\")\
-						    imgui.renderMesh:setTexture(imgui.textureObject)\
-							imgui.renderMesh:setVertexMap(imgui.idx)");
+		luaL_dostring(g_L,
+			"imgui.renderMesh = love.graphics.newMesh(imgui.vertexformat, love.image.newImageData(imgui.verticesSize / 4, 1, 'rgba8', imgui.verticesData), \"triangles\") "
+			"imgui.renderMesh:setTexture(imgui.textureObject) "
+			"imgui.renderMesh:setVertexMap(imgui.idx) ");
 
 		int position = 1;
 		for (int cmd_i = 0; cmd_i < cmd_list->CmdBuffer.size(); cmd_i++)
@@ -171,7 +172,7 @@ bool Init(lua_State *L)
 	g_keyMap["y"] = 18;
 	g_keyMap["z"] = 19;
 
-	io.KeyMap[ImGuiKey_Tab] = g_keyMap["tab"];                     // Keyboard mapping. ImGui will use those indices to peek into the io.KeyDown[] array.
+	io.KeyMap[ImGuiKey_Tab] = g_keyMap["tab"];        // Keyboard mapping. ImGui will use those indices to peek into the io.KeyDown[] array.
 	io.KeyMap[ImGuiKey_LeftArrow] = g_keyMap["left"];
 	io.KeyMap[ImGuiKey_RightArrow] = g_keyMap["right"];
 	io.KeyMap[ImGuiKey_UpArrow] = g_keyMap["up"];
@@ -365,11 +366,11 @@ bool GetWantTextInput()
 // Fonts
 void SetGlobalFontFromFileTTF(const char *path, float size_pixels, float spacing_x, float spacing_y, float oversample_x, float oversample_y)
 {
-    ImGuiIO& io = ImGui::GetIO();
-    ImFontConfig conf;
-    conf.OversampleH = oversample_x;
-    conf.OversampleV = oversample_y;
-    conf.GlyphExtraSpacing.x = spacing_x;
-    conf.GlyphExtraSpacing.y = spacing_y;
-    io.Fonts->AddFontFromFileTTF(path, size_pixels, &conf);
+	ImGuiIO& io = ImGui::GetIO();
+	ImFontConfig conf;
+	conf.OversampleH = oversample_x;
+	conf.OversampleV = oversample_y;
+	conf.GlyphExtraSpacing.x = spacing_x;
+	conf.GlyphExtraSpacing.y = spacing_y;
+	io.Fonts->AddFontFromFileTTF(path, size_pixels, &conf);
 }
