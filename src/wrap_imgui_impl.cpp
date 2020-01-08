@@ -51,9 +51,9 @@ char *strndup( const char *s1, size_t n)
 /*
 ** Love implentation functions
 */
-static bool g_inited = false;
 static int	g_textures[250]; // Should be enough
 static bool	g_returnValueLast = true;
+
 
 static int w_ShutDown(lua_State *L)
 {
@@ -63,11 +63,6 @@ static int w_ShutDown(lua_State *L)
 
 static int w_NewFrame(lua_State *L)
 {
-	if (!g_inited)
-	{
-		Init(L);
-		g_inited = true;
-	}
 	NewFrame();
 	return 0;
 }
@@ -1553,9 +1548,23 @@ extern "C" LOVE_IMGUI_EXPORT int luaopen_imgui(lua_State *L)
 	lua_pushstring(L, "love");
 	lua_call(L, 1, 1);
 
+	// Check love.graphics presence (love is at -1)
+	// FIXME: Do this as early as possible, but I don't want to break stuff
+	lua_pushstring(L, "graphics");
+	lua_rawget(L, -2);
+	if (lua_isnil(L, -1))
+		return luaL_error(L, "love-imgui requires love.graphics to function");
+	lua_pop(L, 1);
+
 	// initialize dostring cache
 	// imgui is at -2, love is at -1
 	DoStringCache::init(L, "love-imgui");
 	lua_pop(L, 1); // remove "love" table
+
+	// Initialize imgui
+	int top = lua_gettop(L);
+	Init(L);
+	lua_settop(L, top);
+
 	return 1;
 }
