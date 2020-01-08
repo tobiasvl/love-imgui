@@ -17,7 +17,8 @@ jobs:
       env:
         BUILD_ARCH: ${{ matrix.arch }}
       run: |
-        set VCBT="C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvarsall.bat"
+        rem GitHub actions where's my VS2017 vcvarsall.bat?
+        set VCBT="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat"
         if %BUILD_ARCH% == Win32 (
           call %VCBT% x86
         ) else (
