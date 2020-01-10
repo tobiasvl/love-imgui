@@ -8,6 +8,7 @@ set(LUAJIT_SEARCH_PATHS
 	/usr/local
 	/usr
 	$ENV{LUAJIT_DIR}
+	${LUAJIT_DIR}
 )
 
 find_path(LUAJIT_INCLUDE_DIR
