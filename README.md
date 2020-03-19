@@ -27,7 +27,16 @@ It uses imgui 1.73 and is based on LÖVE 11.1.
 
 ## Getting Started
 
-Just build the project, and copy the generated dynamic module next to your love executable or into the LÖVE application data folder (for instance "C:/Users/<user>/AppData/Roaming/LOVE" on Windows or ~/.local/shared/love on Linux).
+Build the project using CMake:
+
+```
+cmake -Bbuild -H. -DCMAKE_INSTALL_PREFIX=$PWD/installdir -DCMAKE_BUILD_TYPE=Release
+cmake --build build --config Release --target install
+```
+
+(Windows users may want to change `$PWD` with `%CD%` when running from cmd)
+
+Then copy the generated dynamic module next to your love executable or into the LÖVE application data folder (for instance "C:/Users/<user>/AppData/Roaming/LOVE" on Windows or ~/.local/shared/love on Linux).
 
 Pre-built binaries for Windows and Mas OSX are provided in the [releases](https://github.com/slages/love-imgui/releases) page.
 
