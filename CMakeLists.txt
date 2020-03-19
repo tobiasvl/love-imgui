@@ -1,4 +1,10 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+
+IF(${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_BINARY_DIR})
+	# Protip: run cmake like this: cmake -Bbuild -H. or see the readme
+	message(FATAL_ERROR "Prevented in-tree build.")
+endif()
+
 PROJECT(love-imgui)
 
 SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
