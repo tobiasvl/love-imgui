@@ -64,4 +64,4 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: love-imgui-linux
-        path: installdir/lib
+        path: installdir
