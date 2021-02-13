@@ -99,6 +99,7 @@ void ImGui_Impl_RenderDrawLists(ImDrawData* draw_data)
 				love.graphics.setScissor(imgui.clipX, imgui.clipY, imgui.clipWidth, imgui.clipHeight) \
 				imgui.renderMesh:setDrawRange(imgui.vertexPosition, imgui.vertexCount) \
 				love.graphics.draw(imgui.renderMesh) \
+				love.graphics.setBlendMode(\"alpha\", \"alphamultiply\")\
 			");
 		}
 	}
