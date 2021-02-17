@@ -236,11 +236,31 @@ static int w_AddFontFromFileTTF(lua_State *L) {
 	char fullPath[4096] = {0};
 	sprintf(fullPath, "%s/%s", basePath, filename);
 
-	ImFontConfig* fontCfg = (ImFontConfig*)lua_touserdata(L, 3);
+	// this is not used. Did the original author intend to expose the
+	// font config API to Lua?
+	// ImFontConfig* fontCfg = (ImFontConfig*)lua_touserdata(L, 3);
+
+	ImFontConfig cfg;
 
 	ImGuiIO& io = ImGui::GetIO();
-	ImFont* font = io.Fonts->AddFontFromFileTTF(&(fullPath[0]), pixelSize);
+	ImFont* font = io.Fonts->AddFontFromFileTTF(&(fullPath[0]), pixelSize, &cfg);
 	lua_settop(L, 0);
+
+	// Rebuild the love texture object
+	io.Fonts->Build();
+	unsigned char* pixels;
+	int width, height;
+	io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
+	
+	DoStringCache::getImgui(L);
+	lua_pushnumber(L, width);
+	lua_setfield(L, -2, "textureWidth");
+	lua_pushnumber(L, height);
+	lua_setfield(L, -2, "textureHeight");
+	lua_pushlstring(L, (char *)pixels, width * height * 4);
+	lua_setfield(L, -2, "texturePixels");
+	luaL_dostring(L, "imgui.textureObject = love.graphics.newImage(love.image.newImageData(imgui.textureWidth, imgui.textureHeight, 'rgba8', imgui.texturePixels))");
+	lua_pop(L, 1);
 
 	if (font == nullptr) {
 		return luaL_error(L, "Could not load font");
