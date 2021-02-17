@@ -42,7 +42,7 @@ Pre-built binaries for Windows and Mas OSX are provided in the [releases](https:
 
 ## Examples
 
-Simple integration:
+### Simple integration
 ```lua
 local imgui = require "imgui"
 
@@ -168,6 +168,18 @@ function love.wheelmoved(x, y)
     end
 end
 ```
+### Fonts
+
+Since `ImGui::IO` isn't exposed to Lua, the `ImFontAtlas::AddFontFileFromTTF` function is forwarded to the main API table, enabling the use of custom fonts:
+
+```Lua
+local fontHandle = imgui.AddFontFileFromTTF("pathToFont.tff", 16)
+imgui.PushFont(fontHandle)
+imgui.Text "Hello"
+imgui.PopFont()
+```
+
+Note that `imgui.NewFrame()` must be called *at least once* before using `imgui.PushFont()`.
 
 ## License
 
