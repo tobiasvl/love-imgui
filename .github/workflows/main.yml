@@ -10,8 +10,11 @@ jobs:
         arch: [Win32, x64]
     steps:
     - name: Shallow Clone LuaJIT
-      shell: cmd
-      run: git clone --depth 1 https://github.com/LuaJIT/LuaJIT
+      uses: actions/checkout@v3
+      with:
+        repository: LuaJIT/LuaJIT
+        ref: v2.1
+        path: LuaJIT
     - name: Build LuaJIT
       shell: cmd
       env:
@@ -29,7 +32,7 @@ jobs:
         msvcbuild amalg
         if not errorlevel 0 exit /b 1
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         path: love-imgui
     - name: Configure
@@ -43,7 +46,7 @@ jobs:
       shell: cmd
       run: cmake --build build --config Release --target install
     - name: Artifact
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v3
       with:
         name: love-imgui-windows-${{ matrix.arch }}
         path: installdir/lib
@@ -52,10 +55,9 @@ jobs:
     steps:
     - name: Get Dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install libluajit-5.1-dev --assume-yes
+        sudo apt-get update && sudo apt-get install libluajit-5.1-dev --assume-yes
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         path: love-imgui
     - name: Configure
@@ -63,7 +65,7 @@ jobs:
     - name: Build
       run: cmake --build build --target install
     - name: Artifact
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v3
       with:
         name: love-imgui-linux
         path: installdir
