@@ -19,7 +19,7 @@ ELSE()
 ENDIF()
 
 ADD_LIBRARY(love-imgui
-	SHARED
+	MODULE
 	src/libimgui/imconfig.h
 	src/libimgui/imgui.cpp
 	src/libimgui/imgui.h

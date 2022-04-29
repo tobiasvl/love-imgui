@@ -49,7 +49,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: love-imgui-windows-${{ matrix.arch }}
-        path: installdir/lib
+        path: installdir
   build-linux:
     runs-on: ubuntu-latest
     steps:
