@@ -24,42 +24,41 @@ void init(lua_State *L, const std::string &tabname)
 
 int doString(lua_State *L, const std::string &str)
 {
+	int r;
+
 	// get table in registry
 	lua_pushlstring(L, tableName.c_str(), tableName.length());
-	lua_rawget(L, LUA_REGISTRYINDEX);
-	int top = lua_gettop(L);
-
+	lua_rawget(L, LUA_REGISTRYINDEX); // +1
 	lua_pushlstring(L, str.c_str(), str.length());
-	lua_rawget(L, top);
+	lua_rawget(L, -2); // +1
 
 	if (lua_isnil(L, -1))
 	{
 		// Load new string
 		static std::string prepend = "local imgui, love = ... ";
-		int r;
 		std::string luastr = prepend + str;
-		lua_pop(L, 1); // remove nil
+		lua_pop(L, 1); // remove nil -1
 
-		if ((r = luaL_loadbuffer(L, luastr.c_str(), luastr.length(), luastr.c_str())))
+		if ((r = luaL_loadbuffer(L, luastr.c_str(), luastr.length(), luastr.c_str()))) // +1
 		{
 			// leave error message in stack
-			lua_remove(L, top);
+			lua_remove(L, -2); // -1
 			return r;
 		}
 
-		lua_pushlstring(L, str.c_str(), str.length());
-		lua_pushvalue(L, -2);
-		lua_rawset(L, top);
+		lua_pushlstring(L, str.c_str(), str.length()); // +1
+		lua_pushvalue(L, -2); // +1
+		lua_rawset(L, -4); // -2
 	}
 
 	// function is in -1
 	lua_pushstring(L, "imgui");
-	lua_rawget(L, top);
+	lua_rawget(L, -3); // +1
 	lua_pushstring(L, "love");
-	lua_rawget(L, top);
-	lua_remove(L, top);
-	lua_call(L, 2, LUA_MULTRET);
-	return 0;
+	lua_rawget(L, -4); // +1
+	lua_remove(L, -4);
+	r = lua_pcall(L, 2, LUA_MULTRET, 0);
+	return r;
 }
 
 void getImgui(lua_State *L)
